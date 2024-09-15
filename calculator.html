@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8" name="viewport"
+    content="width=device-width,
+    initial-scale=1.0">
+ <title>Calculator App</title>
+ <script
+ src="https://cdn.tailwindcss.com">
+ </script>
+ <link rel="stylesheet"       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+ <link rel="stylesheet"       href="style.css"> <!-- add you css file name here-->
+</head>
+<body>
+<div class="calculator text-center">
+ <input type="text" disabled class="display text-right text-[2rem]" placeholder="0">
+ <div class="buttons text-[1.1rem]"> 
+    <button class="btn b1" data-value="AC">AC</button>
+  <button class="btn b1" data-value="+/-">+/-</button>
+    <button class="btn b1" data-value="%">%</button>
+    <button class="btn b2" data-value="÷">&divide;</button>
+    
+    
+    <button class="btn b3" data-value="7">7</button>
+    <button class="btn b3" data-value="8">8</button>
+    <button class="btn b3" data-value="9">9</button>
+    <button class="btn b2" data-value="x">&times;</button>
+    
+    <button class="btn b3" data-value="4">4</button>
+    <button class="btn b3" data-value="5">5</button>
+    <button class="btn b3" data-value="6">6</button>
+    <button class="btn b2" data-value="-">-</button>
+    
+    <button class="btn b3" data-value="1">1</button>
+    <button class="btn b3" data-value="2">2</button>
+    <button class="btn b3" data-value="3">3</button>
+    <button class="btn b2" data-value="+">+</button>
+  
+    <button class="btn b3 col-span-2" data-value="0">0</button>
+    <button class="btn b3" data-value=".">.</button>
+    <button class="btn b2" data-value="=">=</button>
+    <button class="btn b1" data-value="⌫">⌫</button>
+ </div>
+</div>
+</body>
+<script>
+document.querySelectorAll('.btn').forEach(button => {
+    button.addEventListener('click', function() {
+        const value = this.getAttribute('data-value');
+        handleInput(value);
+    });
+});
+
+function handleInput(value) {
+    const display = document.querySelector('.display');
+
+    if (display.value === "Error") {
+        // Clear the display if there's an error message
+        display.value = '';
+    }
+
+    if (value === 'AC') {
+        clearDisplay();
+    } else if (value === '=') {
+        calculateResult();
+    } else if (value === '+/-') {
+        toggleSign();
+    } else if (value === '⌫') {
+        removeLastCharacter();
+    } else if (value === '%') {
+        handlePercentage();
+    } else {
+        appendToDisplay(value);
+    }
+}
+
+function clearDisplay() {
+    document.querySelector('.display').value = '';
+}
+
+function removeLastCharacter() {
+    const display = document.querySelector('.display');
+    display.value = display.value.slice(0, -1);
+}
+
+function appendToDisplay(value) {
+    document.querySelector('.display').value += value;
+}
+
+function calculateResult() {
+    let expression = document.querySelector('.display').value;
+
+    // Replace symbols with JavaScript operators
+    expression = expression.replace(/x/g, '*').replace(/÷/g, '/');
+
+    try {
+        let result = eval(expression);
+        document.querySelector('.display').value = result;
+    } catch (error) {
+        document.querySelector('.display').value = "Error";
+    }
+}
+
+function toggleSign() {
+    const display = document.querySelector('.display');
+    if (display.value) {
+        display.value = display.value.startsWith('-') 
+            ? display.value.substring(1)
+            : '-' + display.value;
+    }
+}
+
+function handlePercentage() {
+    const display = document.querySelector('.display');
+    if (display.value) {
+        // Convert the current value to a percentage
+        display.value = (parseFloat(display.value) / 100).toString();
+    }
+}
+
+</script>
+</html>
